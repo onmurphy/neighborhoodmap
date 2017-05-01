@@ -5,353 +5,330 @@
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-        
-        body {
-    overflow-x: hidden;
- }
-        
-        #sidebar-nav {
+          #map {
             height: 100%;
-                background-color: black;
-            }
-        
-        li {
+          }
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }  
+          body {
+            overflow-x: hidden;
+          } 
+          #sidebar-nav {
+            height: 100%;
+            background-color: black;
+          }   
+          li {
             margin-bottom: 10px;
-        }
-        
-        .ui-autocomplete {
-  z-index: 10000000;
-}
-
-}
+          }
+          .ui-autocomplete {
+            z-index: 10000000;
+          }
     </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js">
-  </script>
-  </head>
-  <body>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
+</head>
+<body>
     <div class="col-md-3" id="sidebar-nav">
-
         <h2 style="color:white">Nashville, TN</h2>
-        <h4>things to see</h4>
-                <br/>
+        <h4>things to see</h4> <br/>
           
-    <form>
-  <input class="form-control" id="search" type="search" name="search" placeholder="Filter markers" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
-</form>
+        <form>
+            <input class="form-control" id="search" type="search" name="search" placeholder="Filter markers" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
+        </form>
         <br/>
-<div data-bind="visible: users().length > 0">
-  <ul style="color: white; list-style: none; margin-bottom: 10px;" data-bind="foreach: users">
-      <li data-bind="text: name, click: function(){id}">
+        <div data-bind="visible: users().length > 0">
+            <ul style="color: white; list-style: none; margin-bottom: 10px;" data-bind="foreach: users">
+              <li data-bind="text: name, click: function(){id}">
 
-      </li>
-</ul>
-                </div>
+              </li>
+            </ul>
         </div>
+    </div>
+    
     <div class="col-md-9" id="map"></div>
       
     <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalheader">Modal Header</h4>
+                </div>
+                <div class="modal-body" id="article">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title" id="modalheader">Modal Header</h4>
-      </div>
-      <div class="modal-body" id="article">
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
+    
 
-  </div>
-</div>
-    <script type="text/html" id="tag">
-              <li>
-                <strong data-bind="text: name"></strong>
-              </li>
-            </script>
     <script>
-      var map;
-      var panorama1;
+        var map;
+        var panorama1;
         var panorama2;
         var panorama3;
         var panorama4;
         var panorama5;
-      var searchbar = document.getElementById('searchbar');
-      var park = {lat: 36.1490, lng: -86.8120};
-      var opry = {lat: 36.2069, lng: -86.6921};
-      var vandy = {lat: 36.1447, lng: -86.8027};
-      var bird = {lat: 36.1021, lng: -86.8168};
-      var belle = {lat: 36.1048, lng: -86.8657};
+        var searchbar = document.getElementById('searchbar');
+        var park = {lat: 36.1490, lng: -86.8120};
+        var opry = {lat: 36.2069, lng: -86.6921};
+        var vandy = {lat: 36.1447, lng: -86.8027};
+        var bird = {lat: 36.1021, lng: -86.8168};
+        var belle = {lat: 36.1048, lng: -86.8657};
         
-      
+        var contentString1 = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h3>The Parthenon</h3>'+
+          '<div id="bodyContent">'+
+          '<a id="parkview">GOOGLE STREET VIEW</a><br/>'+
+          '<a id="parkwiki">WIKI</a>'+
+          '</div>'+
+          '</div>';
+
+        var contentString2 = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h3>Grand Ole Opry</h3>'+
+          '<div id="bodyContent">'+
+          '<a id="opryview">GOOGLE STREET VIEW</a><br/>'+
+          '<a id="oprywiki">WIKI</a>'+
+          '</div>'+
+          '</div>';
+
+        var contentString3 = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h3>Bluebird Café</h3>'+
+          '<div id="bodyContent">'+
+          '<a id="birdview">GOOGLE STREET VIEW</a><br/>'+
+          '<a id="birdwiki">WIKI</a>'+
+          '</div>'+
+          '</div>';
+
+        var contentString4 = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          '<h3>Vanderbilt University</h3>'+
+          '<div id="bodyContent">'+
+          '<a id="vandyview">GOOGLE STREET VIEW</a><br/>'+
+          '<a id="vandywiki">WIKI</a>'+
+          '</div>'+
+          '</div>';
+
+        var contentString5 = '<div id="content">'+
+          '<div id="siteNotice">'+
+          '</div>'+
+          "<h3>Belle Meade Plantation</h3>"+
+          '<div id="bodyContent">'+
+          '<a id="belleview">GOOGLE STREET VIEW</a><br/>'+
+          '<a id="bellewiki">WIKI</a>'+
+          '</div>'+
+          '</div>';
         
-      var parkview = document.getElementById('parkview');
-        
-      var contentString1 = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h3>The Parthenon</h3>'+
-      '<div id="bodyContent">'+
-      '<a id="parkview">GOOGLE STREET VIEW</a><br/>'+
-      '<a id="parkwiki">WIKI</a>'+
-      '</div>'+
-      '</div>';
-        
-      var contentString2 = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h3>Grand Ole Opry</h3>'+
-      '<div id="bodyContent">'+
-      '<a id="opryview">GOOGLE STREET VIEW</a><br/>'+
-      '<a id="oprywiki">WIKI</a>'+
-      '</div>'+
-      '</div>';
-        
-    var contentString3 = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h3>Bluebird Café</h3>'+
-      '<div id="bodyContent">'+
-      '<a id="birdview">GOOGLE STREET VIEW</a><br/>'+
-      '<a id="birdwiki">WIKI</a>'+
-      '</div>'+
-      '</div>';
-        
-    var contentString4 = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      '<h3>Vanderbilt University</h3>'+
-      '<div id="bodyContent">'+
-      '<a id="vandyview">GOOGLE STREET VIEW</a><br/>'+
-      '<a id="vandywiki">WIKI</a>'+
-      '</div>'+
-      '</div>';
-        
-    var contentString5 = '<div id="content">'+
-      '<div id="siteNotice">'+
-      '</div>'+
-      "<h3>Belle Meade Plantation</h3>"+
-      '<div id="bodyContent">'+
-      '<a id="belleview">GOOGLE STREET VIEW</a><br/>'+
-      '<a id="bellewiki">WIKI</a>'+
-      '</div>'+
-      '</div>';
-        
-    $('body').on('click','#parkview',function(){
-        
-        panorama1.setVisible(true);
-    });
+        $('body').on('click','#parkview',function(){
+            panorama1.setPosition({lat: 36.1490, lng: -86.8120});
+            panorama1.setVisible(true);
+        });
         $('body').on('click','#opryview',function(){
             panorama1.setPosition({lat: 36.2069, lng: -86.6921});
             panorama1.setVisible(true);
-    });
+        });
         $('body').on('click','#birdview',function(){
-        panorama1.setPosition({lat: 36.1021, lng: -86.8168});
+            panorama1.setPosition({lat: 36.1021, lng: -86.8168});
             panorama1.setVisible(true);
-    });
+        });
         $('body').on('click','#vandyview',function(){
-        panorama1.setPosition({lat: 36.1447, lng: -86.8027});
+            panorama1.setPosition({lat: 36.1447, lng: -86.8027});
             panorama1.setVisible(true);
-    });
+        });
         $('body').on('click','#belleview',function(){
-        panorama1.setPosition({lat: 36.1048, lng: -86.8657});
+            panorama1.setPosition({lat: 36.1048, lng: -86.8657});               
             panorama1.setVisible(true);
-    });
+        });
         
     $('body').on('click','#parkwiki',function(){
         
         $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Parthenon_(Nashville)&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById('modalheader').innerHTML = data.parse.title;
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
- 
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
- 
-            blurb.find('p').first().remove();
-            // remove any references
-            blurb.find('sup').remove();
-            
-            blurb.find('Template:Infobox N').remove();
- 
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-            $('#myModal').modal('show');
- 
-        },
-        error: function (errorMessage) {
-            $('#article').html(errorMessage);
-            $('#myModal').modal('show');
-        }
-    });
+            type: "GET",
+            url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Parthenon_(Nashville)&callback=?",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById('modalheader').innerHTML = data.parse.title;
+                var markup = data.parse.text["*"];
+                var blurb = $('<div></div>').html(markup);
+
+                // remove links as they will not work
+                blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+                blurb.find('p').first().remove();
+                // remove any references
+                blurb.find('sup').remove();
+
+                blurb.find('Template:Infobox N').remove();
+
+                // remove cite error
+                blurb.find('.mw-ext-cite-error').remove();
+                $('#article').html($(blurb).find('p'));
+                $('#myModal').modal('show');
+
+            },
+            error: function (errorMessage) {
+                $('#article').html(errorMessage);
+                $('#myModal').modal('show');
+            }
+        });
 
     });
         
     $('body').on('click','#oprywiki',function(){
         
         $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Grand_Ole_Opry&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById('modalheader').innerHTML = data.parse.title;
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
- 
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
- 
-            // remove any references
-            blurb.find('sup').remove();
- 
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-            $('#myModal').modal('show');
- 
-        },
-        error: function (errorMessage) {
-            $('#article').html(errorMessage);
-            $('#myModal').modal('show');
-        }
-    });
+            type: "GET",
+            url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Grand_Ole_Opry&callback=?",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById('modalheader').innerHTML = data.parse.title;
+                var markup = data.parse.text["*"];
+                var blurb = $('<div></div>').html(markup);
+
+                // remove links as they will not work
+                blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+                // remove any references
+                blurb.find('sup').remove();
+
+                // remove cite error
+                blurb.find('.mw-ext-cite-error').remove();
+                $('#article').html($(blurb).find('p'));
+                $('#myModal').modal('show');
+
+            },
+            error: function (errorMessage) {
+                $('#article').html(errorMessage);
+                $('#myModal').modal('show');
+            }
+        });
 
     });
         
     $('body').on('click','#birdwiki',function(){
         
         $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Bluebird_Café&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById('modalheader').innerHTML = data.parse.title;
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
- 
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
- 
-            // remove any references
-            blurb.find('sup').remove();
-            
-            blurb.find('Template:Infobox N').remove();
- 
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-            $('#myModal').modal('show');
- 
-        },
-        error: function (errorMessage) {
-            $('#article').html(errorMessage);
-            $('#myModal').modal('show');
-        }
-    });
+            type: "GET",
+            url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Bluebird_Café&callback=?",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById('modalheader').innerHTML = data.parse.title;
+                var markup = data.parse.text["*"];
+                var blurb = $('<div></div>').html(markup);
+
+                // remove links as they will not work
+                blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+                // remove any references
+                blurb.find('sup').remove();
+
+                blurb.find('Template:Infobox N').remove();
+
+                // remove cite error
+                blurb.find('.mw-ext-cite-error').remove();
+                $('#article').html($(blurb).find('p'));
+                $('#myModal').modal('show');
+
+            },
+            error: function (errorMessage) {
+                $('#article').html(errorMessage);
+                $('#myModal').modal('show');
+            }
+        });
 
     });
         
     $('body').on('click','#vandywiki',function(){
         
         $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Vanderbilt_University&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById('modalheader').innerHTML = data.parse.title;
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
- 
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
- 
-            // remove any references
-            blurb.find('sup').remove();
- 
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-            $('#myModal').modal('show');
- 
-        },
-        error: function (errorMessage) {
-            $('#article').html(errorMessage);
-            $('#myModal').modal('show');
-        }
-    });
+            type: "GET",
+            url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Vanderbilt_University&callback=?",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById('modalheader').innerHTML = data.parse.title;
+                var markup = data.parse.text["*"];
+                var blurb = $('<div></div>').html(markup);
+
+                // remove links as they will not work
+                blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+                // remove any references
+                blurb.find('sup').remove();
+
+                // remove cite error
+                blurb.find('.mw-ext-cite-error').remove();
+                $('#article').html($(blurb).find('p'));
+                $('#myModal').modal('show');
+
+            },
+            error: function (errorMessage) {
+                $('#article').html(errorMessage);
+                $('#myModal').modal('show');
+            }
+        });
 
     });
         
     $('body').on('click','#bellewiki',function(){
         
         $.ajax({
-        type: "GET",
-        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Belle_Meade_Plantation&callback=?",
-        contentType: "application/json; charset=utf-8",
-        async: false,
-        dataType: "json",
-        success: function (data, textStatus, jqXHR) {
-            document.getElementById('modalheader').innerHTML = data.parse.title;
-            var markup = data.parse.text["*"];
-            var blurb = $('<div></div>').html(markup);
- 
-            // remove links as they will not work
-            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
- 
-            // remove any references
-            blurb.find('sup').remove();
- 
-            // remove cite error
-            blurb.find('.mw-ext-cite-error').remove();
-            $('#article').html($(blurb).find('p'));
-            $('#myModal').modal('show');
- 
-        },
-        error: function (errorMessage) {
-            $('#article').html(errorMessage);
-            $('#myModal').modal('show');
-        }
-    });
+            type: "GET",
+            url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Belle_Meade_Plantation&callback=?",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            dataType: "json",
+            success: function (data, textStatus, jqXHR) {
+                document.getElementById('modalheader').innerHTML = data.parse.title;
+                var markup = data.parse.text["*"];
+                var blurb = $('<div></div>').html(markup);
+
+                // remove links as they will not work
+                blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+                // remove any references
+                blurb.find('sup').remove();
+
+                // remove cite error
+                blurb.find('.mw-ext-cite-error').remove();
+                $('#article').html($(blurb).find('p'));
+                $('#myModal').modal('show');
+
+            },
+            error: function (errorMessage) {
+                $('#article').html(errorMessage);
+                $('#myModal').modal('show');
+            }
+        });
 
     });
 
 
-      function initMap() {
+    function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 36.13, lng: -86.767960},
           zoom: 12,
@@ -454,12 +431,6 @@
             marker5.setAnimation(google.maps.Animation.BOUNCE);
             setTimeout(function(){ marker5.setAnimation(null); }, 1400);
         });
-          
-        
-          
-          
-          
-        
         
         panorama1 = map.getStreetView();
         panorama1.setPosition({lat: 36.1490, lng: -86.8120});
@@ -469,100 +440,96 @@
         }));
           
         panorama1.setVisible(false);
-    
-  
-          
-        
+
       }
     
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=initMap"
-    async defer></script>
-        
+    async defer></script>   
     <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
-<script>
-var users = [
-  { id: 'park', name: 'The Parthenon' },
-  { id: 'opry', name: 'Grand Ole Opry' },
-  { id: 'vandy', name: 'Vanderbilt University' },
-  { id: 'bird', name: 'The Bluebird Cafe' },
-  { id: 'cafe', name: 'Belle Meade Plantation' }
-];
+    <script>
+        var users = [
+          { id: 'park', name: 'The Parthenon' },
+          { id: 'opry', name: 'Grand Ole Opry' },
+          { id: 'vandy', name: 'Vanderbilt University' },
+          { id: 'bird', name: 'The Bluebird Cafe' },
+          { id: 'cafe', name: 'Belle Meade Plantation' }
+        ];
 
-var viewModel = {
-  users: ko.observableArray([]),
-  query: ko.observable(''),
+        var viewModel = {
+          users: ko.observableArray([]),
+          query: ko.observable(''),
 
-  search: function(value) {
-    viewModel.users.removeAll();
+          search: function(value) {
+            viewModel.users.removeAll();
 
-    if (value == '') return;
+            if (value == '') return;
 
-    for (var user in users) {
-      if (users[user].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-        viewModel.users.push(users[user]);
-      }
-    }
-  },
-    
-    park: function() {
-        infowindow2.close();
-                infowindow3.close();
-                infowindow4.close();
-                infowindow5.close();
-                infowindow1.open(map, marker1);
-                marker1.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function(){ marker1.setAnimation(null); }, 1400);
-    },
-    
-    opry: function() {
-                infowindow1.close();
-                infowindow3.close();
-                infowindow4.close();
-                infowindow5.close();
-                infowindow2.open(map, marker2);
-                marker2.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function(){ marker2.setAnimation(null); }, 1400);
-    },
-    
-    vandy : function() {
-    infowindow1.close();
-            infowindow2.close();
-            infowindow3.close();
-            infowindow5.close();
-            infowindow4.open(map, marker4);
-            marker4.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function(){ marker4.setAnimation(null); }, 1400);
-    },
-    
-    bird : function() {
-    infowindow1.close();
-            infowindow2.close();
-            infowindow4.close();
-            infowindow5.close();
-            infowindow3.open(map, marker3);
-            marker3.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function(){ marker3.setAnimation(null); }, 1400);
-    },
-    
-    cafe : function() {
-    infowindow2.close();
-            infowindow3.close();
-            infowindow4.close();
+            for (var user in users) {
+              if (users[user].name.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                viewModel.users.push(users[user]);
+              }
+            }
+          },
+
+            park: function() {
+                infowindow2.close();
+                        infowindow3.close();
+                        infowindow4.close();
+                        infowindow5.close();
+                        infowindow1.open(map, marker1);
+                        marker1.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function(){ marker1.setAnimation(null); }, 1400);
+            },
+
+            opry: function() {
+                        infowindow1.close();
+                        infowindow3.close();
+                        infowindow4.close();
+                        infowindow5.close();
+                        infowindow2.open(map, marker2);
+                        marker2.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function(){ marker2.setAnimation(null); }, 1400);
+            },
+
+            vandy : function() {
             infowindow1.close();
-            infowindow5.open(map, marker5);
-            marker5.setAnimation(google.maps.Animation.BOUNCE);
-            setTimeout(function(){ marker5.setAnimation(null); }, 1400);
-    }
-};
+                    infowindow2.close();
+                    infowindow3.close();
+                    infowindow5.close();
+                    infowindow4.open(map, marker4);
+                    marker4.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(function(){ marker4.setAnimation(null); }, 1400);
+            },
 
-viewModel.query.subscribe(viewModel.search);
-ko.applyBindings(viewModel);
-    
+            bird : function() {
+            infowindow1.close();
+                    infowindow2.close();
+                    infowindow4.close();
+                    infowindow5.close();
+                    infowindow3.open(map, marker3);
+                    marker3.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(function(){ marker3.setAnimation(null); }, 1400);
+            },
 
-</script>
+            cafe : function() {
+            infowindow2.close();
+                    infowindow3.close();
+                    infowindow4.close();
+                    infowindow1.close();
+                    infowindow5.open(map, marker5);
+                    marker5.setAnimation(google.maps.Animation.BOUNCE);
+                    setTimeout(function(){ marker5.setAnimation(null); }, 1400);
+            }
+        };
+
+        viewModel.query.subscribe(viewModel.search);
+        ko.applyBindings(viewModel);
+
+
+    </script>
       
     
       
-  </body>
+</body>
 </html>
