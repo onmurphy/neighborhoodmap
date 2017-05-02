@@ -73,11 +73,11 @@
         var belle = {lat: 36.1048, lng: -86.8657};
         
         var locations = ko.observableArray( [
-          { id: 'park', name: 'The Parthenon', latlong:  park},
-          { id: 'opry', name: 'Grand Ole Opry', latlong:  opry},
-          { id: 'vandy', name: 'Vanderbilt University', latlong: vandy},
-          { id: 'bird', name: 'The Bluebird Cafe', latlong: bird},
-          { id: 'cafe', name: 'Belle Meade Plantation', latlong: belle}
+          { id: 'park', name: 'The Parthenon', latlong:  park, wiki: 'Parthenon_(Nashville)'},
+          { id: 'opry', name: 'Grand Ole Opry', latlong:  opry, wiki: 'Grand_Ole_Opry'},
+          { id: 'vandy', name: 'Vanderbilt University', latlong: vandy, wiki: 'Vanderbilt_University'},
+          { id: 'bird', name: 'The Bluebird Cafe', latlong: bird, wiki: 'Bluebird_Café'},
+          { id: 'cafe', name: 'Belle Meade Plantation', latlong: belle, wiki: 'Belle_Meade_Plantation'}
         ]);
             
         var viewModel = function() {
@@ -116,7 +116,7 @@
                 infowindow.addListener('click', function() {
                     $.ajax({
                         type: "GET",
-                        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=Grand_Ole_Opry&callback=?",
+                        url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + v.wiki + "&callback=?",
                         contentType: "application/json; charset=utf-8",
                         async: false,
                         dataType: "json",
