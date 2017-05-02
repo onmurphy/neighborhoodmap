@@ -32,7 +32,9 @@
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=viewModel"
+    async defer></script>  
 </head>
 <body>
     <div class="col-md-3" id="sidebar-nav">
@@ -45,9 +47,7 @@
     <div class="col-md-9" id="map"></div>
       
     
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=initMap"
-    async defer></script>   
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
+    
     <script>
         var map;
         
@@ -87,6 +87,7 @@
 
     </script>
       
+ 
     
       
 </body>
