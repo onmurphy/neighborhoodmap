@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+          #map {
+            height: 100%;
+          }
+          html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }  
+          body {
+            overflow-x: hidden;
+          } 
+          #sidebar-nav {
+            height: 100%;
+            background-color: black;
+          }   
+          li {
+            margin-bottom: 10px;
+          }
+          .ui-autocomplete {
+            z-index: 10000000;
+          }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/1.2.1/knockout-min.js"></script>
+</head>
+<body>
+    <div class="col-md-3" id="sidebar-nav">
+        <h2 style="color:white">Nashville, TN</h2>
+        <h4>things to see</h4> <br/>
+          
+        
+    </div>
+    
+    <div class="col-md-9" id="map"></div>
+      
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=initMap"
+    async defer></script>   
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
+    <script>
+        var map;
+        
+        var park = {lat: 36.1490, lng: -86.8120};
+        var opry = {lat: 36.2069, lng: -86.6921};
+        var vandy = {lat: 36.1447, lng: -86.8027};
+        var bird = {lat: 36.1021, lng: -86.8168};
+        var belle = {lat: 36.1048, lng: -86.8657};
+        
+        var locations = ko.observableArray( [
+          { id: 'park', name: 'The Parthenon', latlong:  park},
+          { id: 'opry', name: 'Grand Ole Opry', latlong:  opry},
+          { id: 'vandy', name: 'Vanderbilt University', latlong: vandy},
+          { id: 'bird', name: 'The Bluebird Cafe', latlong: bird},
+          { id: 'cafe', name: 'Belle Meade Plantation', latlong: belle}
+        ]);
+            
+        var viewModel = function() {
+            map = new google.maps.Map(document.getElementById('map'), {
+              center: {lat: 36.13, lng: -86.767960},
+              zoom: 12,
+              streetViewControl: false
+            });
+            
+            locations().forEach(function(v,i){
+                  var marker = new google.maps.Marker({
+                    position: v.latlong,
+                    map: map,
+                    title: v.name
+                });
+            });
+          
+        };
+
+        ko.applyBindings(new viewModel);
+
+
+    </script>
+      
+    
+      
+</body>
+</html>
