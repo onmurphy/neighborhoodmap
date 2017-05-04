@@ -43,8 +43,8 @@
          <br/>
          <input type="search" class="form-control" data-bind="value: query, valueUpdate: 'keyup'" placeholder="Filter markers..">
          <br/>
-         <ul style="color: white; list-style: none" data-bind="foreach: locations">
-            <li data-bind="text: name, click: listViewClick"></li>
+         <ul style="color: white; list-style: none" data-bind="foreach: search">
+            <li data-bind="text: name, click: $root.listViewClick"></li>
          </ul>
       </div>
       <div class="col-sm-9" id="map"></div>
@@ -235,7 +235,9 @@
          });
          
          var ViewModel = function() {
-             this.locations = ko.observableArray( [
+             var self = this;
+             
+             self.locations = ko.observableArray( [
                { id: 'park', name: 'The Parthenon', latlong:  park, wiki: 'Parthenon_(Nashville)'},
                { id: 'opry', name: 'Grand Ole Opry', latlong:  opry, wiki: 'Grand_Ole_Opry'},
                { id: 'vandy', name: 'Vanderbilt University', latlong: vandy, wiki: 'Vanderbilt_University'},
@@ -243,7 +245,7 @@
                { id: 'belle', name: 'Belle Meade Plantation', latlong: belle, wiki: 'Belle_Meade_Plantation'}
              ]);
              
-             this.query = ko.observable('')
+             self.query = ko.observable('')
            
              //click event for list items
              self.listViewClick = function(location) {
@@ -254,10 +256,13 @@
              
              //search event to filter list
                self.search = ko.computed(function() {
-                 return ko.utils.arrayFilter(this.locations, function(listResult) {
+                 return ko.utils.arrayFilter(self.locations(), function(listResult) {
                    return listResult.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
                  });
+                 
                });
+             
+             
              
          };
          
