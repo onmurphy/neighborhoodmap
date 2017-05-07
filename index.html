@@ -257,7 +257,11 @@
              //search event to filter list
                self.search = ko.computed(function() {
                  return ko.utils.arrayFilter(self.locations(), function(listResult) {
-                   return listResult.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
+                   var match = listResult.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
+                   if (listResult.marker) {
+                      listResult.marker.setVisible(match);
+                    }
+                   return match;
                  });
                  
                });
