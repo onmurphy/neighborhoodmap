@@ -16,7 +16,7 @@ var ViewModel = function () {
              
     self.query = ko.observable('');
 
-    self.modalArticle = ko.observable('');
+    self.modalArticle = ko.observableArray();
            
              //click event for list items
     self.listViewClick = function(location) {
@@ -79,7 +79,7 @@ ViewModel.prototype.initMap = function() {
                          dataType: "json",
                          success: function (data, textStatus, jqXHR) {
                             document.getElementById('modalheader').innerHTML = data.parse.title;
-                            var markup = data.parse.text["*"];
+                            var markup = data.parse["text"]["*"];
                             var blurb = $('<div></div>').html(markup);
 
                             // remove links as they will not work
@@ -93,12 +93,19 @@ ViewModel.prototype.initMap = function() {
 
                             // remove cite error
                             blurb.find('.mw-ext-cite-error').remove();
-                            var article = $(blurb).find('p');
-                            self.modalArticle(article);
+                            var article = blurb.find('p');
+                            self.modalArticle.removeAll();
+                            for (var i = 0; i < article.length; i++) {
+                                if (article[i].innerText != 'Template:Infobox N') {
+                                    self.modalArticle.push(article[i].innerText);
+                                }
+                            }
+                            
              
 
                        },
                        error: function (errorMessage) {
+                           self.modalArticle.removeAll();
                            self.modalArticle("We're sorry, the info from Wikipedia could not be loaded at this time");
             
                        }
