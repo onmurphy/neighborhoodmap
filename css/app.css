@@ -1,0 +1,32 @@
+#map {
+    height: 100%;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+} 
+
+#sidebar-nav {
+    height: 100%;
+    background-color: black;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+.ui-autocomplete {
+    z-index: 10000000;
+}
+
+#wikitext {
+    color: white;
+    max-height: 350px;
+    overflow-y: scroll;
+}

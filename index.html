@@ -4,35 +4,10 @@
       <title>Simple Map</title>
       <meta name="viewport" content="initial-scale=1.0">
       <meta charset="utf-8">
-      <style>
-         #map {
-         height: 100%;
-         }
-         html, body {
-         height: 100%;
-         margin: 0;
-         padding: 0;
-         }  
-         body {
-         overflow-x: hidden;
-         } 
-         #sidebar-nav {
-         height: 100%;
-         background-color: black;
-         }   
-         li {
-         margin-bottom: 10px;
-         }
-         .ui-autocomplete {
-         z-index: 10000000;
-         }
-      </style>
+       
+      <link rel="stylesheet" href="css/app.css"> 
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=vm.initMap"
-         async defer onerror="googleError()"></script>  
+      
    </head>
    <body>
       <div class="col-sm-3" id="sidebar-nav">
@@ -44,6 +19,8 @@
          <ul style="color: white; list-style: none" data-bind="foreach: search">
             <li data-bind="text: name, click: $root.listViewClick"></li>
          </ul>
+          <br/>
+         <div id="wikitext" data-bind="html: modalArticle"></div>
       </div>
       <div class="col-sm-9" id="map"></div>
       <!-- modal for wiki info-->
@@ -62,132 +39,12 @@
             </div>
          </div>
       </div>
-      <!-- end modal for wiki info-->
-      <script>
-         var park = {lat: 36.1490, lng: -86.8120};
-         var opry = {lat: 36.2069, lng: -86.6921};
-         var vandy = {lat: 36.1447, lng: -86.8027};
-         var bird = {lat: 36.1021, lng: -86.8168};
-         var belle = {lat: 36.1048, lng: -86.8657};
-            
-         var ViewModel = function() {
-             var self = this;
-             
-             self.locations = ko.observableArray( [
-               { id: 'park', name: 'The Parthenon', latlong:  park, wiki: 'Parthenon_(Nashville)'},
-               { id: 'opry', name: 'Grand Ole Opry', latlong:  opry, wiki: 'Grand_Ole_Opry'},
-               { id: 'vandy', name: 'Vanderbilt University', latlong: vandy, wiki: 'Vanderbilt_University'},
-               { id: 'bird', name: 'The Bluebird Cafe', latlong: bird, wiki: 'Bluebird_Café'},
-               { id: 'belle', name: 'Belle Meade Plantation', latlong: belle, wiki: 'Belle_Meade_Plantation'}
-             ]);
-             
-             self.query = ko.observable('')
-           
-             //click event for list items
-             self.listViewClick = function(location) {
-                 location.infowindow.open(location.map, location.marker);
-                 location.marker.setAnimation(google.maps.Animation.BOUNCE);
-                 setTimeout(function(){ location.marker.setAnimation(null); }, 1400);
-             };
-             
-             //search event to filter list
-               self.search = ko.computed(function() {
-                 return ko.utils.arrayFilter(self.locations(), function(listResult) {
-                   var match = listResult.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
-                   if (listResult.marker) {
-                      listResult.marker.setVisible(match);
-                    }
-                   return match;
-                 });
-                 
-               });
-             
-         };
-         
-         //initialize map, markers, and infowindows. markers and infowindows are tied to observed array
-         ViewModel.prototype.initMap = function() {
-             var self = this;
-             this.map = new google.maps.Map(document.getElementById('map'), {
-               center: {lat: 36.13, lng: -86.767960},
-               zoom: 12,
-               streetViewControl: false
-             });
-             
-             var infowindow = new google.maps.InfoWindow();
-             
-             this.locations().forEach(function(v,i){
-                 var marker = new google.maps.Marker({
-                     position: v.latlong,
-                     map: self.map,
-                     title: v.name
-                 });
-                 self.locations()[i].marker = marker;
-                 
-                 self.locations()[i].marker.addListener('click', function() {
-                     var contentString = '<div id="content">'+
-                   '<div id="siteNotice">'+
-                   '</div>'+
-                   '<h3>' + self.locations()[i].name + '</h3>'+
-                   '<div id="bodyContent">'+
-                   "<a id='" + self.locations()[i].id + "'>WIKI</a>"+
-                   '</div>'+
-                   '</div>';
-
-                     infowindow.setContent(contentString);
-                     
-                     infowindow.open(map, marker);
-                     marker.setAnimation(google.maps.Animation.BOUNCE);
-                     setTimeout(function(){ marker.setAnimation(null); }, 1400);
-                     
-                     $('body').on('click', '#' + self.locations()[i].id, function(){
-                         $.ajax({
-                             type: "GET",
-                             url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + self.locations()[i].wiki + "&callback=?",
-                             contentType: "application/json; charset=utf-8",
-                             async: true,
-                             dataType: "json",
-                             success: function (data, textStatus, jqXHR) {
-                                 document.getElementById('modalheader').innerHTML = data.parse.title;
-                                 var markup = data.parse.text["*"];
-                                 var blurb = $('<div></div>').html(markup);
-
-                                 // remove links as they will not work
-                                 blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
-
-                                 blurb.find('p').first().remove();
-                                 // remove any references
-                                 blurb.find('sup').remove();
-
-                                 blurb.find('Template:Infobox N').remove();
-
-                                 // remove cite error
-                                 blurb.find('.mw-ext-cite-error').remove();
-                                 $('#article').html($(blurb).find('p'));
-                                 $('#myModal').modal('show');
-
-                             },
-                             error: function (errorMessage) {
-                                 $('#article').html("We're sorry, the info from Wikipedia could not be loaded at this time");
-                                 $('#myModal').modal('show');
-                             }
-                         });
-                    });
-                 });
-         
-             });
-         };
-          
-        googleError = function() {
-             var self = this;
-             $('#article').html("Google Maps API could not be loaded at this time");
-             $('#myModal').modal('show');
-         };
-             
-         
-         var vm = new ViewModel();
-         ko.applyBindings(vm);
-         
-         
-      </script>
+       
+      <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
+      <script src="js/app.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCXErGvS8GIks7Q7tucPPctR62uj29nnAs&callback=vm.initMap"
+         async defer onerror="googleError()"></script>  
    </body>
 </html>
