@@ -73,12 +73,12 @@ ViewModel.prototype.initMap = function() {
 
                      $.ajax({
                          type: "GET",
-                         url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + self.locations()[i].wiki + "&callback=?",
+                         url: "http://en.wikiedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + self.locations()[i].wiki + "&callback=?",
                          contentType: "application/json; charset=utf-8",                             
                          async: true,
                          dataType: "json",
                          success: function (data, textStatus, jqXHR) {
-                            document.getElementById('modalheader').innerHTML = data.parse.title;
+
                             var markup = data.parse["text"]["*"];
                             var blurb = $('<div></div>').html(markup);
 
@@ -105,9 +105,7 @@ ViewModel.prototype.initMap = function() {
 
                        },
                        error: function (errorMessage) {
-                           self.modalArticle.removeAll();
-                           self.modalArticle("We're sorry, the info from Wikipedia could not be loaded at this time");
-            
+                           window.alert("We're sorry, the info from Wikipedia could not be loaded at this time");
                        }
                     });
               
@@ -117,8 +115,8 @@ ViewModel.prototype.initMap = function() {
 };
           
 googleError = function() {
-    var self = this;
-    self.modalArticle("Google Maps API could not be loaded at this time");         
+    window.alert("Google Maps API could not be loaded at this time");
+    
 };
              
          
