@@ -73,7 +73,7 @@ ViewModel.prototype.initMap = function() {
 
                      $.ajax({
                          type: "GET",
-                         url: "http://en.wikiedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + self.locations()[i].wiki + "&callback=?",
+                         url: "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + self.locations()[i].wiki + "&callback=?",
                          contentType: "application/json; charset=utf-8",                             
                          async: true,
                          dataType: "json",
